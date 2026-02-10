@@ -263,7 +263,7 @@ namespace TFE_Settings
 				const char* const * locations = c_gameLocations[gameId];
 				for (u32 i = 0; i < c_hardcodedPathCount[gameId]; i++)
 				{
-					if (FileUtil::directoryExits(locations[i]))
+					if (FileUtil::directoryExists(locations[i]))
 					{
 						strcpy(s_gameSettings.header[gameId].sourcePath, locations[i]);
 						pathValid = true;
@@ -1313,7 +1313,7 @@ namespace TFE_Settings
 
 	bool validatePath(const char* path, const char* sentinel)
 	{
-		if (!FileUtil::directoryExits(path)) { return false; }
+		if (!FileUtil::directoryExists(path)) { return false; }
 
 		char sentinelPath[TFE_MAX_PATH];
 		sprintf(sentinelPath, "%s%s", path, sentinel);

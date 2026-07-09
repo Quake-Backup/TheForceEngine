@@ -6,6 +6,7 @@
 #include <TFE_Ui/ui.h>
 #include <TFE_Asset/imageAsset.h>	// For image saving, this should be refactored...
 #include <TFE_System/profiler.h>
+#include <TFE_System/system.h>
 #include <TFE_PostProcess/blit.h>
 #include <TFE_PostProcess/bloomThreshold.h>
 #include <TFE_PostProcess/bloomDownsample.h>
@@ -58,6 +59,7 @@ namespace TFE_RenderBackend
 	static bool s_gpuColorConvert = false;
 	static bool s_useRenderTarget = false;
 	static bool s_bloomEnable = false;
+	static bool s_skipDisplayAndClear = false;
 	static DisplayMode s_displayMode;
 	static f32 s_clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	static u32 s_rtWidth, s_rtHeight;
@@ -92,7 +94,7 @@ namespace TFE_RenderBackend
 	{
 		return (SDL_GetWindowFlags(s_window) & SDL_WINDOW_MINIMIZED) != 0;
 	}
-		
+
 	SDL_Window* createWindow(const WindowState& state)
 	{
 		u32 windowFlags = SDL_WINDOW_OPENGL;
@@ -100,11 +102,11 @@ namespace TFE_RenderBackend
 		s_isMacOS = (strcmp(SDL_GetPlatform(), "Mac OS X") == 0);
 
 		TFE_Settings_Window* windowSettings = TFE_Settings::getWindowSettings();
-		
+
 		s32 x = windowSettings->x, y = windowSettings->y;
 		s32 displayIndex = getDisplayIndex(x, y);
 		assert(displayIndex >= 0);
-		
+
 		if (windowed)
 		{
 			y = std::max(32, y);
@@ -185,7 +187,7 @@ namespace TFE_RenderBackend
 			uiScale = 150;
 		}
 
-    if (s_isMacOS) {
+		if (s_isMacOS) {
 			// macOS specific setup:
 			// Create and bind a global VAO for macOS
 			glGenVertexArrays(1, &s_globalVAO);
@@ -213,7 +215,7 @@ namespace TFE_RenderBackend
 		TFE_Ui::init(window, context, uiScale);
 		return window;
 	}
-		
+
 	bool init(const WindowState& state)
 	{
 		m_window = createWindow(state);
@@ -239,7 +241,7 @@ namespace TFE_RenderBackend
 
 		s_bloomMerge = new BloomMerge();
 		s_bloomMerge->init();
-		
+
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClearDepth(0.0f);
 
@@ -315,11 +317,30 @@ namespace TFE_RenderBackend
 
 		memcpy(s_clearColor, color, sizeof(f32) * 4);
 	}
-		
+
+	void setSkipDisplayAndClear(bool skip)
+	{
+		s_skipDisplayAndClear = skip;
+	}
+
+	bool getSkipDisplayAndClear()
+	{
+		return s_skipDisplayAndClear;
+	}
+
 	void swap(bool blitVirtualDisplay)
 	{
-		// Blit the texture or render target to the screen.
-		if (blitVirtualDisplay) { drawVirtualDisplay(); }
+		// If an external renderer (e.g. OGV player) already drew to the backbuffer, skip.
+		if (s_skipDisplayAndClear)
+		{
+			s_skipDisplayAndClear = false;
+		}
+		else if (blitVirtualDisplay)
+		{
+			// [DBG] drawVirtualDisplay firing - if this logs during cutscene, stale texture is reaching the screen.
+			//TFE_System::logWrite(LOG_WARNING, "Cutscene", "[DBG] swap: drawVirtualDisplay() called (blitVirtualDisplay=%d, skipDisplay was false)", (int)blitVirtualDisplay);
+			drawVirtualDisplay();
+		}
 		else { glClear(GL_COLOR_BUFFER_BIT); }
 
 		// Handle the UI.
@@ -353,7 +374,7 @@ namespace TFE_RenderBackend
 		strcpy(s_screenshotPath, screenshotPath);
 		s_screenshotQueued = true;
 	}
-		
+
 	void startGifRecording(const char* path, bool skipCountdown)
 	{
 		s_screenCapture->beginRecording(path, skipCountdown);
@@ -406,7 +427,7 @@ namespace TFE_RenderBackend
 			SDL_GetDisplayBounds(i, &s_displayBounds[i]);
 		}
 	}
-		
+
 	s32 getDisplayCount()
 	{
 		enumerateDisplays();
@@ -431,7 +452,7 @@ namespace TFE_RenderBackend
 
 		return displayIndex;
 	}
-		
+
 	bool getDisplayMonitorInfo(s32 displayIndex, MonitorInfo* monitorInfo)
 	{
 		enumerateDisplays();
@@ -716,7 +737,7 @@ namespace TFE_RenderBackend
 	{
 		RenderTarget::copy(s_virtualRenderTarget, (RenderTarget*)src);
 	}
-		
+
 	void copyBackbufferToRenderTarget(RenderTargetHandle dst)
 	{
 		s_copyTarget = (RenderTarget*)dst;

@@ -916,15 +916,27 @@ namespace LevelEditor
 	{
 		if (!sector)
 		{
-			s_level.bounds[0] = { FLT_MAX,  FLT_MAX,  FLT_MAX };
-			s_level.bounds[1] = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
-			s_level.layerRange[0] = INT_MAX;
-			s_level.layerRange[1] = -INT_MAX;
 			const size_t count = s_level.sectors.size();
 			sector = s_level.sectors.data();
-			for (size_t i = 0; i < count; i++, sector++)
+
+			if (count == 0)
 			{
-				updateBoundsWithSector(sector);
+				s_level.bounds[0] = { 0 };
+				s_level.bounds[1] = { 0 };
+				s_level.layerRange[0] = 0;
+				s_level.layerRange[1] = 0;
+			}
+			else
+			{
+				s_level.bounds[0] = { FLT_MAX,  FLT_MAX,  FLT_MAX };
+				s_level.bounds[1] = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
+				s_level.layerRange[0] = INT_MAX;
+				s_level.layerRange[1] = -INT_MAX;
+
+				for (size_t i = 0; i < count; i++, sector++)
+				{
+					updateBoundsWithSector(sector);
+				}
 			}
 		}
 		else
@@ -5515,6 +5527,30 @@ namespace LevelEditor
 			{
 				levHistory_createSnapshot("Clean Zero-Sectors");
 			}
+		}
+	}
+
+	// Update visible layer when history replay changes the overall layer bounds.
+	void updateCurrentLayer(s32* oldLayerRange)
+	{
+		bool inRange = s_curLayer >= s_level.layerRange[0] && s_curLayer <= s_level.layerRange[1];
+		if (inRange)
+		{
+			// If layer bounds expands, follow it
+			if (oldLayerRange[0] > s_level.layerRange[0])
+			{
+				s_curLayer = s_level.layerRange[0];
+			}
+			else if (oldLayerRange[1] < s_level.layerRange[1])
+			{
+				s_curLayer = s_level.layerRange[1];
+			}
+		}
+		else
+		{
+			// Drifted out of range, find closest
+			s_curLayer = std::min(s_curLayer, s_level.layerRange[1]);
+			s_curLayer = std::max(s_curLayer, s_level.layerRange[0]);
 		}
 	}
 }

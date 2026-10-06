@@ -17,13 +17,8 @@ icmdo-1.voc  "Offizier: Da ist er! Stoppt ihn!" //unused?
 ioffic-1.voc "Officer: Halt! Hold it right there." //Probably unused - not translated
 m16moc01.voc "Offizier Mohc: Es ist lange her, seit ich einen Mann zum Kampf herausgefordert habe. Es freut mich, dass mein Gegner würdig ist."
 
+
 //SFX
-boba-1.voc	"[Fett lacht]"
-boba-3.voc	"[Fett grunzt]"
-boba-4.voc	"[Fetts Todesschrei]"
-beep-01.voc "[Alarm]"
-beep-10.voc "[MINE PIEPST]"
-fall.voc 	"[Kyle schreit]"
 door.voc 	"[Türe zischt]"
 door-04.voc "[Türe bewegt sich]"
 door1-1.voc "[Türe zischt]"
@@ -35,24 +30,42 @@ door2-1.voc "[Türe bewegt sich]"
 door3-1.voc "[Türe schliesst]"
 //door3-2.voc "[Türe bewegt sich]" //too frequent
 //door3-3.voc "[Türe schliesst]"
+boba-1.voc	"[Fett lacht]"
+boba-3.voc	"[Fett grunzt]"
+boba-4.voc	"[Fetts Todesschrei]"
+gamor-1.voc  "[Gamorreaner Todesschrei]"            //Gamorrean death
+gamor-3.voc "[Gamorreaner grunzt]"                  //Gamorrean alert
+reeyee1.voc "[Alien schreit]"                       //Gran alert
+reeyee-1.voc "[Alien schreit]"                      //Gran alert (duplicate)
+reeyee3.voc  "[Alien Todesschrei]"                   //Gran death
+reeyee-3.voc "[Alien Todesschrei]"                   //Gran death (duplicate)
+probe-1.voc "[Suchdroidesprache]"                   //Probe alert
+probalm.voc "[Schaltkreise überladen]"
+bossk-1.voc "[Alien zischt]"                        //Trandoshan alert
+bosskdie.voc "[Alien schreit]"                      //Trandoshan death
+kell-1.voc 	"[Kelldrache brüllt]"                   //Kell dragon
+kell-2.voc	"[Kelldrache grummelt]"                 //Kell dragon
+kell-7.voc   "[Kelldrache schreit]"                 //Kell dragon death
+intalert.voc "[Droiden Repulsorlift]"               //Interrogator droid alert
+weld-die.voc "[Welder grinds to a halt]             //Welder death
+st-die-1.voc "[Todesschrei]"                         //Trooper/officer death
+phase1a.voc  "[Bedrohliches elektronisches Hummen]"           //Phase 1 alert
+phase1c.voc  "[Mechanisches death rattle]"            //Phase 1 death
+phase2c.voc  "[Künstlicher schrei, zusammenstürzendes Metall]" //Phase 3 death
+phase3a.voc  "[Klappern, Mohc lacht]"              //Phase 3 taunt
+phase3c.voc  "[Mohc schreit]" 
 ex-lrg1.voc "[Grosse Explosion]"
 ex-med1.voc "[Explosion]"
 ex-tiny.voc "[Kleine Explosion]"
 swim-in.voc "[Pflotsch]"
-gamor-3.voc "[Gamorreaner grunzt]"
-reeyee1.voc "[Alien schreit]"
-reeyee-1.voc "[Alien schreit]"
-probe-1.voc "[Suchdroidesprache]"
-//probalm.voc "[Schaltkreise überladen]"
-bossk-1.voc "[Alien zischt]"
+beep-01.voc "[Alarm]"
+beep-10.voc "[MINE PIEPST]"
+fall.voc     "[Kyle schreit]"
 choke.voc	"[Kyle japst und hustet]" 5
-kell-1.voc 	"[Kelldrache brüllt]"
-kell-2.voc	"[Kelldrache grummelt]"
 landing1.voc "[Triebwerkgeräusche]"
 locked-1.voc "[Verschlossen]"
+ex-small.voc "[Explosion]"
 creatur1.voc "[Bedrohliche Geräusche, Wasser spritzt]"
-intalert.voc "[Droiden Repulsorlift]"
-
 
 //----- MISSION VOICEOVER --------------------------------------
 //M01 (Secret Base)
@@ -106,7 +119,6 @@ m11kyl01.voc  "Kyle: Ich habe das Zentralschloss aufgebrochen. Ich bin drinn."
 m11kyl02.voc  "Kyle: Ok die Nava Card wird dekodiert."
 m11kyl03.voc  "Kyle: Ich habe das Band. Bin auf dem Weg zurück."
 m11kyl04.voc  "Kyle: Wo warst du Jan?"
-
 //M12 (Fuel Station)
 m12imp01.voc "Officer: Schmugglerschiff, ihr Anflug ist genemigt. Beginnen Sie Ihr Andockmanöver." 4.5
 m12kyl01.voc "Kyle: Okay Jan, das Schiff gehört mir."
